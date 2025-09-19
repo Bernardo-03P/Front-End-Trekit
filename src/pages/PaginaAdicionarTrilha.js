@@ -80,14 +80,12 @@ const PaginaAdicionarTrilha = () => {
             
             // O `autor_id` é obtido no backend a partir do token. 
             // Só precisamos garantir que o token está no header da requisição.
-            const config = {
-                headers: { 
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}` 
+            await axios.post(`${apiUrl}/api/trilhas`, data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                
                 }
-            };
-
-            await axios.post(`${apiUrl}/api/trilhas`, data, config);
+            });
 
             setSuccess('Trilha enviada para aprovação! Redirecionando...');
             setTimeout(() => navigate('/explorar'), 2000);
