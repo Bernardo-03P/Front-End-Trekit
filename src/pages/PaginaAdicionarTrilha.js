@@ -2,10 +2,12 @@ import React, { useState, useRef } from 'react';
 import { Container, Card, Form, Button, Alert, Row, Col, Image } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { ArrowLeft, Upload } from 'react-bootstrap-icons';
+// O import do jwtDecode não é mais necessário no frontend para esta função
+// import { jwtDecode } from 'jwt-decode'; 
 
 const apiUrl = process.env.REACT_APP_API_URL;
+
 const PaginaAdicionarTrilha = () => {
     const [formData, setFormData] = useState({
         nome: '',
@@ -33,7 +35,10 @@ const PaginaAdicionarTrilha = () => {
         if (e.target.files) {
             const filesArray = Array.from(e.target.files).slice(0, 5);
             setImagens(filesArray);
+            
+            // Limpa previews antigos da memória para evitar memory leaks
             previews.forEach(url => URL.revokeObjectURL(url));
+            
             const previewsArray = filesArray.map(file => URL.createObjectURL(file));
             setPreviews(previewsArray);
         }
@@ -44,27 +49,53 @@ const PaginaAdicionarTrilha = () => {
         setError('');
         setSuccess('');
         
-        const data = new FormData();
-        for (const key in formData) {
-            data.append(key, formData[key]);
+        // --- PREPARAÇÃO DOS DADOS ---
+        const dataToSubmit = { ...formData };
+        
+        // Converte a string vazia do campo opcional 'tempo_min' para null,
+        // que é o valor que o banco de dados espera.
+        if (dataToSubmit.tempo_min === '') {
+            dataToSubmit.tempo_min = null;
         }
+
+        const data = new FormData();
+        // Adiciona os campos de texto já tratados
+        for (const key in dataToSubmit) {
+            // Garante que não enviamos valores 'null' ou 'undefined' no FormData
+            if (dataToSubmit[key] !== null && dataToSubmit[key] !== undefined) {
+                data.append(key, dataToSubmit[key]);
+            }
+        }
+        // Adiciona as imagens
         for (let i = 0; i < imagens.length; i++) {
             data.append('imagens', imagens[i]);
         }
 
         try {
             const token = localStorage.getItem('authToken');
-            if (!token) { setError("Sessão expirada. Por favor, faça login novamente."); return; }
-            const decodedToken = jwtDecode(token);
-            data.append('autor_id', decodedToken.id);
+            if (!token) { 
+                setError("Sessão expirada. Por favor, faça login novamente."); 
+                return; 
+            }
+            
+            // O `autor_id` é obtido no backend a partir do token. 
+            // Só precisamos garantir que o token está no header da requisição.
+            const config = {
+                headers: { 
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}` 
+                }
+            };
 
-            await axios.post(`${apiUrl}/api/trilhas`, data, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            await axios.post(`${apiUrl}/api/trilhas`, data, config);
+
             setSuccess('Trilha enviada para aprovação! Redirecionando...');
             setTimeout(() => navigate('/explorar'), 2000);
+
         } catch (err) {
-            setError(err.response?.data?.error || 'Erro ao adicionar a trilha.');
+            // Tratamento de erro aprimorado para mostrar a mensagem da API se ela existir
+            const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Erro ao adicionar a trilha.';
+            setError(errorMessage);
             console.error(err);
         }
     };
