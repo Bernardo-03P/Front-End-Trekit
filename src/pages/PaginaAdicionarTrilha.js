@@ -3,8 +3,6 @@ import { Container, Card, Form, Button, Alert, Row, Col, Image } from 'react-boo
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Upload } from 'react-bootstrap-icons';
-// O import do jwtDecode não é mais necessário no frontend para esta função
-// import { jwtDecode } from 'jwt-decode'; 
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -35,10 +33,7 @@ const PaginaAdicionarTrilha = () => {
         if (e.target.files) {
             const filesArray = Array.from(e.target.files).slice(0, 5);
             setImagens(filesArray);
-            
-            // Limpa previews antigos da memória para evitar memory leaks
             previews.forEach(url => URL.revokeObjectURL(url));
-            
             const previewsArray = filesArray.map(file => URL.createObjectURL(file));
             setPreviews(previewsArray);
         }
@@ -49,24 +44,17 @@ const PaginaAdicionarTrilha = () => {
         setError('');
         setSuccess('');
         
-        // --- PREPARAÇÃO DOS DADOS ---
         const dataToSubmit = { ...formData };
-        
-        // Converte a string vazia do campo opcional 'tempo_min' para null,
-        // que é o valor que o banco de dados espera.
         if (dataToSubmit.tempo_min === '') {
             dataToSubmit.tempo_min = null;
         }
 
         const data = new FormData();
-        // Adiciona os campos de texto já tratados
         for (const key in dataToSubmit) {
-            // Garante que não enviamos valores 'null' ou 'undefined' no FormData
             if (dataToSubmit[key] !== null && dataToSubmit[key] !== undefined) {
                 data.append(key, dataToSubmit[key]);
             }
         }
-        // Adiciona as imagens
         for (let i = 0; i < imagens.length; i++) {
             data.append('imagens', imagens[i]);
         }
@@ -78,12 +66,16 @@ const PaginaAdicionarTrilha = () => {
                 return; 
             }
             
-            // O `autor_id` é obtido no backend a partir do token. 
-            // Só precisamos garantir que o token está no header da requisição.
-            await axios.post(`${apiUrl}/api/trilhas`, data, {
+            // ==============================================================================
+            // CORREÇÃO: Usando a forma mais explícita e robusta de chamada do Axios
+            //           para garantir o envio correto de FormData com headers.
+            // ==============================================================================
+            await axios({
+                method: 'post',
+                url: `${apiUrl}/api/trilhas`,
+                data: data,
                 headers: {
                     'Authorization': `Bearer ${token}`
-                
                 }
             });
 
@@ -91,7 +83,6 @@ const PaginaAdicionarTrilha = () => {
             setTimeout(() => navigate('/explorar'), 2000);
 
         } catch (err) {
-            // Tratamento de erro aprimorado para mostrar a mensagem da API se ela existir
             const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Erro ao adicionar a trilha.';
             setError(errorMessage);
             console.error(err);
@@ -106,7 +97,7 @@ const PaginaAdicionarTrilha = () => {
             <Row className="justify-content-center">
                 <Col lg={10} xl={8}>
                     <Card className="p-4 shadow-sm">
-                        <Card.Body> {/* <<< Tag de abertura */}
+                        <Card.Body>
                             <h2 className="text-center mb-4">Adicione uma Nova Trilha</h2>
                             {error && <Alert variant="danger">{error}</Alert>}
                             {success && <Alert variant="success">{success}</Alert>}
@@ -150,7 +141,6 @@ const PaginaAdicionarTrilha = () => {
                                 <Form.Group className="mb-3"><Form.Label>Código de Incorporação do Google Maps</Form.Label><Form.Control as="textarea" rows={4} placeholder='Vá ao Google Maps -> Compartilhar -> Incorporar um mapa -> Copie e cole o código HTML aqui.' name="mapa_embed_url" value={formData.mapa_embed_url} onChange={handleChange} /></Form.Group>
                                 <div className="d-grid mt-3"><Button variant="primary" type="submit" size="lg">Publicar Trilha</Button></div>
                             </Form>
-                        {/* AQUI ESTAVA FALTANDO A TAG DE FECHAMENTO */}
                         </Card.Body> 
                     </Card>
                 </Col>
