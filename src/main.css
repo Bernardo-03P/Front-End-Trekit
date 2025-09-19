@@ -1,0 +1,79 @@
+.CardTrilha {
+    display: flex;
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 1.5rem; /* <-- ADICIONE ESTA LINHA */
+}
+.banner-img {
+    height: 300px; /* Altura diminuída */
+    object-fit: cover;
+    border-radius: 1.25rem; /* Um pouco mais arredondado */
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Aplica a animação no container da barra de filtros */
+.filtros-coluna {
+    animation: fadeIn 0.4s ease-in-out;
+}
+.search-bar-wrapper {
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar-wrapper .form-control {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    font-size: 1rem;
+    height: 3rem;
+}
+
+#root .search-bar-wrapper .btn-buscar-gradiente {
+    border: none;
+    border-radius: 8px !important;
+    font-weight: 500;
+    color: white !important;
+    padding: 0 2rem;
+    height: 3rem;
+    background: linear-gradient(90deg, #53D7F3 0%, #30A665 100%) !important; /* Importante para vencer o Bootstrap */
+    transition: all 0.2s ease-in-out;
+}
+#root .search-bar-wrapper .btn-buscar-gradiente:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+#root .btn-adicionar-trilha-verde {
+    background-color: #26A69A;
+    color: white !important;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    white-space: nowrap;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+#root .btn-adicionar-trilha-verde:hover {
+    background-color: #218c81;
+    text-decoration: none;
+}

@@ -1,0 +1,102 @@
+/* Fundo da página */
+.auth-page-background {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #F0F2F0; /* Cor de fundo suave */
+}
+
+/* Container do formulário */
+.auth-form-container {
+    background-color: #fff;
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px; /* Largura do formulário */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* Cabeçalho com logo e título */
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+    margin-top: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Inputs do formulário */
+.form-group-container {
+    text-align: left;
+    margin-bottom: 1.25rem;
+}
+
+.form-group-container .form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.form-input-wrapper {
+    position: relative;
+}
+
+.auth-input.form-control {
+    height: 50px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    padding-left: 1rem;
+    padding-right: 2.5rem; /* Espaço para o ícone */
+}
+
+.auth-input.form-control:focus {
+    border-color: #00A97F; /* Cor de destaque */
+    box-shadow: 0 0 0 2px rgba(0, 169, 127, 0.1);
+}
+
+.form-input-icon {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+/* Checkbox de Termos */
+.terms-link {
+    color: #00A97F;
+    font-weight: 500;
+    text-decoration: none;
+}
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+/* Botão de Cadastrar */
+.auth-submit-btn {
+    height: 50px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    /* O gradiente da imagem */
+    background: linear-gradient(90deg, #53D7F3 0%, #30A665 100%);
+    transition: transform 0.2s;
+}
+
+.auth-submit-btn:hover {
+    transform: scale(1.02);
+}
+
+/* Link inferior (Já tem conta?) */
+.secondary-link {
+    font-weight: 600;
+    color: #00A97F;
+    text-decoration: none;
+}
