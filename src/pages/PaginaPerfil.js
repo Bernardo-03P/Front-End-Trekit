@@ -56,7 +56,9 @@ const PaginaPerfil = () => {
     
     const isOwnProfile = loggedInUser && loggedInUser.id === parseInt(id, 10);
     const cacheBuster = new Date().getTime();
-    const avatarSrc = user.avatar_url ? `${apiUrl}/uploads/avatars/${user.avatar_url}?_=${cacheBuster}` : `https://i.pravatar.cc/150?u=${user?.id}`;
+    const avatarSrc = user.avatar_url 
+        ? `${user.avatar_url}?_=${cacheBuster}` 
+        : `https://i.pravatar.cc/150?u=${user?.id}`;
 
 
     return (

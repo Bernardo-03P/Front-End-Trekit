@@ -42,7 +42,7 @@ const AppNavbar = () => {
                                 {user && (
                                     <LinkContainer to={`/perfil/${user.id}`}>
                                         {user.avatar_url ? (
-                                            <Nav.Link as="img" src={`${apiUrl}/uploads/avatars/${user.avatar_url}`} className="navbar-avatar" />
+                                            <Nav.Link as="img" src={user.avatar_url} className="navbar-avatar" />
                                         ) : (
                                             <Nav.Link className="mx-2">Meu Perfil</Nav.Link>
                                         )}

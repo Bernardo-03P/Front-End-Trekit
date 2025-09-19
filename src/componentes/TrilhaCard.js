@@ -19,9 +19,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const TrilhaCard = ({ trilha, onLikeChange }) => {
     const [isLiked, setIsLiked] = useState(trilha.is_liked_by_user);
     
-   const imageUrl = trilha.imagem_principal_url 
-        ? `${apiUrl}/uploads/trilhas/${trilha.imagem_principal_url}` 
-        : trailImagePlaceholder;
+   const imageUrl = trilha.imagem_principal_url || trailImagePlaceholder;
         
     const handleLikeClick = async (e) => {
         e.preventDefault(); 

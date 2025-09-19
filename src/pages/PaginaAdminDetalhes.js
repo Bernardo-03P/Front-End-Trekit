@@ -56,7 +56,7 @@ const PaginaAdminDetalhes = () => {
                             {trilha.imagens && trilha.imagens.length > 0 ? (
                                 trilha.imagens.map(img => (
                                     <Carousel.Item key={img.id}>
-                                        <Image src={`${apiUrl}/uploads/trilhas/${img.nome_arquivo}`} style={{ width: '100%', height: '400px', objectFit: 'cover' }} />
+                                       <Image src={img.caminho_arquivo} style={{ width: '100%', height: '400px', objectFit: 'cover' }} />
                                     </Carousel.Item>
                                 ))
                             ) : (

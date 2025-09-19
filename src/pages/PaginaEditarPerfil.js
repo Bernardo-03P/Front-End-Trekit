@@ -37,7 +37,7 @@ const PaginaEditarPerfil = () => {
                     bio: userData.bio || '',
                 });
                 if (userData.avatar_url) {
-                    setPreview(`${apiUrl}/uploads/avatars/${userData.avatar_url}`);
+                    setPreview(userData.avatar_url);
                 }
             } catch (err) {
                 setError('Não foi possível carregar os dados do seu perfil.');

@@ -77,9 +77,7 @@ const PaginaAdmin = () => {
                 <tbody>
                     {trilhas.length > 0 ? (
                         trilhas.map(trilha => {
-                            const imageUrl = trilha.imagem_principal_url 
-        ? `${apiUrl}/uploads/trilhas/${trilha.imagem_principal_url}` 
-        : trailImagePlaceholder;
+                            const imageUrl = trilha.imagem_principal_url || trailImagePlaceholder;
                             return (
                                 <tr key={trilha.id}>
                                     <td><Image src={imageUrl} style={{ width: '120px', height: '70px', objectFit: 'cover', borderRadius: '4px' }} /></td>
