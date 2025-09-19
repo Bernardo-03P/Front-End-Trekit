@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Form, Row, Col, Button } from 'react-bootstrap';
 import { Funnel, Star } from 'react-bootstrap-icons'; // Importa a estrela vazia também
-const apiUrl = process.env.REACT_APP_API_URL;
+
 const FiltrosLateral = ({ filtros, handleFiltroChange, applyFilters, onClearFilters }) => {
     return (
         <Card className="filtros-card">

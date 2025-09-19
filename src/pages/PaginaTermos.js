@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Card} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-const apiUrl = process.env.REACT_APP_API_URL;
+
 const PaginaTermos = () => {
     return (
         // Envolve tudo em um container flex para centralizar o card

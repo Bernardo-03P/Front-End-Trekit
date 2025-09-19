@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-const apiUrl = process.env.REACT_APP_API_URL;
+
 const TermosModal = ({ show, handleClose }) => {
     // Texto legal mais completo para dar mais profissionalismo à página
     const termos = `

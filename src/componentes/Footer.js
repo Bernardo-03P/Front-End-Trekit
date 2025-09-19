@@ -2,7 +2,7 @@ import React, { useState } from 'react'; // <-- Adiciona o useState
 import { Container } from 'react-bootstrap';
 // Removido o Link, pois não vamos mais navegar para outra página
 import TermosModal from './TermosModal'; // <-- Importa o componente do modal
-const apiUrl = process.env.REACT_APP_API_URL;
+
 const Footer = () => {
     const currentYear = new Date().getFullYear();
 

@@ -53,11 +53,11 @@ const PaginaPerfil = () => {
     if (loading) return <div className="text-center p-5"><Spinner /></div>;
     if (error) return <Alert variant="danger">{error}</Alert>;
     if (!user) return <Alert variant="warning">Usuário não encontrado.</Alert>;
-
+    
     const isOwnProfile = loggedInUser && loggedInUser.id === parseInt(id, 10);
     const cacheBuster = new Date().getTime();
-    const avatarSrc = user.avatar_url ? `${apiUrl}/uploads/avatars/${user.avatar_url}?_=${cacheBuster}`
-        : `https://i.pravatar.cc/150?u=${user?.id}`;
+    const avatarSrc = user.avatar_url ? `${apiUrl}/uploads/avatars/${user.avatar_url}?_=${cacheBuster}` : `https://i.pravatar.cc/150?u=${user?.id}`;
+
 
     return (
         <Container className="py-5">
