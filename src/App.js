@@ -18,21 +18,29 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Rotas SEM Layout */}
+        
         <Route path="/login" element={<PaginaLogin />} />
         <Route path="/cadastro" element={<PaginaCadastro />} />
         <Route path="/termos" element={<PaginaTermos />} />
         
-        {/* Rotas COM Layout (Navbar + Footer) */}
+        <Route element={<PrivateRoute />}>
+            <Route path="/editar-perfil/:id" element={<PaginaEditarPerfil />} />
+        </Route>
+        
+     
         <Route path="/" element={<Layout />}>
+     
           <Route element={<PrivateRoute />}>
-            <Route index element={<PaginaExplorar />} />
+            {/* Definindo a rota de exploração como a rota "padrão" */}
+            <Route index element={<PaginaExplorar />} /> 
             <Route path="/explorar" element={<PaginaExplorar />} />
+            
             <Route path="/minhas-trilhas" element={<PaginaMinhasTrilhas />} />
             <Route path="/adicionar-trilha" element={<PaginaAdicionarTrilha />} />
             <Route path="/trilhas/:id" element={<PaginaDetalhesTrilha />} />
             <Route path="/perfil/:id" element={<PaginaPerfil />} />
-            <Route path="/editar-perfil/:id" element={<PaginaEditarPerfil />} />
+
+            {/* Rotas de Admin */}
             <Route path="/admin" element={<PaginaAdmin />} />
             <Route path="/admin/trilhas/:id" element={<PaginaAdminDetalhes />} />
           </Route>
