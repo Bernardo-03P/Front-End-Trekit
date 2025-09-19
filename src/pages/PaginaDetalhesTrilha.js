@@ -8,7 +8,7 @@ import axios from 'axios';
 import parse from 'html-react-parser';
 import { jwtDecode } from 'jwt-decode';
 
-import './PaginaDetalhesTrilha.css';
+import '../PaginaDetalhesTrilha.css';
 import trailImagePlaceholder from '../assets/trailImage.png';
 
 const apiUrl = process.env.REACT_APP_API_URL;
