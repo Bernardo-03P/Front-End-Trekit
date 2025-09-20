@@ -18,6 +18,8 @@ const PaginaAdicionarTrilha = () => {
         descricao: '',
         mapa_embed_url: ''
     });
+    
+    // === ESTADO CORRETO: 'imagens' é um array para guardar vários arquivos ===
     const [imagens, setImagens] = useState([]);
     const [previews, setPreviews] = useState([]);
     const [error, setError] = useState('');
@@ -29,11 +31,16 @@ const PaginaAdicionarTrilha = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // === FUNÇÃO CORRETA: Converte a lista de arquivos em um array e guarda todos ===
     const handleImageChange = (e) => {
         if (e.target.files) {
+            // Limita a 5 arquivos e converte FileList para um array
             const filesArray = Array.from(e.target.files).slice(0, 5);
             setImagens(filesArray);
-            previews.forEach(url => URL.revokeObjectURL(url));
+
+            // Limpa previews antigos para evitar vazamento de memória
+            previews.forEach(url => URL.revokeObjectURL(url)); 
+            
             const previewsArray = filesArray.map(file => URL.createObjectURL(file));
             setPreviews(previewsArray);
         }
@@ -55,6 +62,9 @@ const PaginaAdicionarTrilha = () => {
                 data.append(key, dataToSubmit[key]);
             }
         }
+        
+        // === LÓGICA CORRETA: Itera sobre o array de imagens e adiciona cada uma ao FormData ===
+        // O backend receberá um array de arquivos com a chave 'imagens'.
         for (let i = 0; i < imagens.length; i++) {
             data.append('imagens', imagens[i]);
         }
@@ -66,15 +76,12 @@ const PaginaAdicionarTrilha = () => {
                 return; 
             }
             
-            // ==============================================================================
-            // CORREÇÃO: Usando a forma mais explícita e robusta de chamada do Axios
-            //           para garantir o envio correto de FormData com headers.
-            // ==============================================================================
             await axios({
                 method: 'post',
                 url: `${apiUrl}/api/trilhas`,
                 data: data,
                 headers: {
+                    // O 'Content-Type': 'multipart/form-data' é adicionado automaticamente pelo navegador com FormData
                     'Authorization': `Bearer ${token}`
                 }
             });
@@ -113,8 +120,10 @@ const PaginaAdicionarTrilha = () => {
                                         <Upload size={32} className="mb-2 text-muted" />
                                         <p className="m-0 text-muted">Clique ou arraste seus anexos para cá</p>
                                     </div>
+                                    {/* === INPUT CORRETO: O atributo 'multiple' permite a seleção de vários arquivos === */}
                                     <Form.Control type="file" multiple accept="image/*" onChange={handleImageChange} ref={fileInputRef} hidden/>
                                 </Form.Group>
+                                
                                 {previews.length > 0 && (
                                     <Row className="mb-3">
                                         {previews.map((preview, index) => (
