@@ -117,15 +117,26 @@ const PaginaDetalhesTrilha = () => {
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         if (!novoComentario.trim() && imagensSelecionadas.length === 0) return;
+        const token = localStorage.getItem('authToken');
+        if (!token) { alert("Sessão expirada. Faça login para comentar."); return; }
+        
         try {
-            const token = localStorage.getItem('authToken');
-            if (!token) { alert("Sessão expirada. Faça login para comentar."); return; }
             const decodedToken = jwtDecode(token);
             const formData = new FormData();
             formData.append('conteudo', novoComentario);
             formData.append('autor_id', decodedToken.id);
             imagensSelecionadas.forEach(file => formData.append('imagens', file));
-            const response = await axios.post(`${apiUrl}/api/trilhas/${id}/comentarios`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            
+            const config = { 
+                headers: { 
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}` // Incluir o token também para a rota de post
+                } 
+            };
+
+            const response = await axios.post(`${apiUrl}/api/trilhas/${id}/comentarios`, formData, config);
+            
+            // A resposta do backend agora inclui o comentário completo com as URLs das imagens
             setComentarios([response.data, ...comentarios]);
             setNovoComentario("");
             setImagensSelecionadas([]);
@@ -155,7 +166,6 @@ const PaginaDetalhesTrilha = () => {
                                 {trilha.imagens && trilha.imagens.length > 0 ? (
                                     trilha.imagens.map(img => (
                                         <Carousel.Item key={img.id}>
-                                            {/* CORREÇÃO: Usando a URL direta do Cloudinary */}
                                             <Image src={img.caminho_arquivo} alt={`Imagem de ${trilha.nome}`} className="w-100" />
                                         </Carousel.Item>
                                     ))
@@ -174,7 +184,7 @@ const PaginaDetalhesTrilha = () => {
                             </div>
                         </div>
                         <div className="bloco-descricao"><p style={{ fontSize: '1.1rem', lineHeight: '1.7' }}>{trilha.descricao || "Descrição indisponível."}</p></div>
-                        <div className="bloco-mapa"><h3 className="fw-bold mb-3">Mapa</h3>{trilha.mapa_embed_url ? <div className="mapa-container">{parse(trilha.mapa_embed_url)}</div> : <div className="mapa-container d-flex align-items-center justify-content-center bg-light"><p className="text-muted">Mapa indisponível.</p></div>}<p className="text-muted mt-2"><GeoAlt /> {trilha.bairro}, {trilha.cidade}</p></div>
+                        <div className="bloco-mapa"><h3 className="fw-bold mb-3">Mapa</h3>{trilha.mapa_embed_url ? <div className="mapa-container">{parse(trilha.mapa_embed_url)}</div> : <div className="mapa-container d-flex align-items-center justify-content-center bg-light"><p className="text-muted">Mapa indisponível.</p></div>}<p className="text-muted mt-2"><GeoAlt /> {trilha.bairro}</p></div>
                     </Col>
                     <Col lg={5}>
                         <div className="sidebar-wrapper">
@@ -185,7 +195,6 @@ const PaginaDetalhesTrilha = () => {
                                     {sugestoes.length > 0 ? (
                                         sugestoes.map(sugestao => (
                                             <Link to={`/trilhas/${sugestao.id}`} key={sugestao.id} className="sugestao-trilha">
-                                                {/* CORREÇÃO: Usando a URL direta do Cloudinary */}
                                                 <Image src={sugestao.imagem_principal_url || trailImagePlaceholder} alt={`Imagem de ${sugestao.nome}`} />
                                                 <div><h6 className="mb-0">{sugestao.nome}</h6><small className="text-muted">por {sugestao.autor_nome}</small></div>
                                             </Link>
@@ -204,25 +213,39 @@ const PaginaDetalhesTrilha = () => {
                         <div className="bloco-comentarios-container">
                             <div className="d-flex justify-content-between align-items-center mb-4"><h3 className="fw-bold mb-0">{comentarios.length} comentários</h3><span className="text-muted" style={{cursor:'pointer'}}><Funnel className="me-1" /> Filtrar por</span></div>
                             <div className="bloco-form-comentario mb-5">
-                                {/* O formulário permanece igual, pois sua lógica já lida com arquivos */}
+                                {/* Formulário para criar um novo comentário */}
                                 <Form onSubmit={handleCommentSubmit}>
-                                    {/* ... seu formulário aqui ... */}
+                                    <Form.Group className="mb-3">
+                                        <Form.Control 
+                                            as="textarea" 
+                                            rows={3} 
+                                            placeholder="Deixe seu comentário aqui..."
+                                            value={novoComentario}
+                                            onChange={(e) => setNovoComentario(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group controlId="formFileMultiple" className="mb-3">
+                                        <Form.Label>Adicionar imagens (até 3)</Form.Label>
+                                        <Form.Control type="file" multiple onChange={handleImageChange} accept="image/png, image/jpeg, image/jpg" />
+                                    </Form.Group>
+                                    <Button variant="success" type="submit">
+                                        Publicar Comentário
+                                    </Button>
                                 </Form>
                             </div>
                             <div>
                                 {comentarios.map(comment => 
                                     <div key={comment.id} className="py-4 border-bottom">
                                         <div className="d-flex gap-3">
-                                            {/* CORREÇÃO: Usando a URL direta do Cloudinary */}
                                             <Image src={comment.autor_avatar_url || `https://i.pravatar.cc/50?u=${comment.autor_id}`} roundedCircle style={{ width: 50, height: 50, objectFit: 'cover' }} />
                                             <div className="flex-grow-1">
                                                 <p className="mb-1"><strong>{comment.autor_nome}</strong> <span className="text-muted small">· {new Date(comment.created_at).toLocaleDateString()}</span></p>
                                                 {comment.conteudo && <p>{comment.conteudo}</p>}
                                                 {comment.imagens && comment.imagens.length > 0 && 
                                                     <Row xs={3} className="g-2 mt-2">
-                                                        {comment.imagens.map((img, index) => 
+                                                        {comment.imagens.map((img) => 
                                                             <Col key={img.id}>
-                                                                {/* CORREÇÃO: Usando a URL direta do Cloudinary */}
+                                                                {/* Com a correção no backend, img.caminho_arquivo agora existe */}
                                                                 <Image src={img.caminho_arquivo} className="img-fluid rounded" style={{ height: 120, objectFit: 'cover', width: '100%' }} />
                                                             </Col>
                                                         )}
