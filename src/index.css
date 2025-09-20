@@ -1,17 +1,31 @@
-body {
-  margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #F7FAF9;
-  color: #333;
+@font-face {
+  font-family: 'Regular';
+  src: url(vremenagrotesk.ttf);
 }
 
+body {
+  margin: 0;
+  font-family: 'Regular' !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--light-white) !important;
+  color: var(--preto) !important;
+}
+
+:root {
+  --verde: #2FAC66 !important;
+  --preto: #232624 !important;
+  --light-white: #F2F8F3 !important;
+  --light-gray: #EAF0EB !important;
+  --border-color: #5B605C !important;
+  --azul: #4BC8EA !important;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 .map-container iframe {
   width: 100% !important;
   height: 100% !important;
